@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 @Service
 public class citasReactivaServiceImpl implements IcitasReactivaService {
 
@@ -27,7 +31,6 @@ public class citasReactivaServiceImpl implements IcitasReactivaService {
         return this.IcitasReactivaRepository
                 .findById(id)
                 .flatMap(p -> this.IcitasReactivaRepository.deleteById(p.getId()).thenReturn(p));
-
     }
 
     @Override
@@ -55,4 +58,27 @@ public class citasReactivaServiceImpl implements IcitasReactivaService {
     public Mono<citasDTOReactiva> findById(String id) {
         return this.IcitasReactivaRepository.findById(id);
     }
+
+    @Override
+    public Mono<citasDTOReactiva> cancelarCita(String id) {
+        return this.IcitasReactivaRepository.findById(id)
+                .filter(p -> p.getEstadoReservaCita() == true)
+                .flatMap(p -> {
+                    p.setEstadoReservaCita(false);
+                    return IcitasReactivaRepository.save(p);
+                });
+    }
+
+    @Override
+    public Flux<citasDTOReactiva> findByFecha(LocalDate fecha) {
+        return IcitasReactivaRepository.findAll()
+                .filter(p -> p.getFechaReservaCita().equals(fecha));
+    }
+
+    @Override
+    public Mono<citasDTOReactiva> findByMedico(String id, String nombreMedico) {
+        return IcitasReactivaRepository.findById(id)
+                .filter(p -> p.getNombreMedico().equalsIgnoreCase(nombreMedico));
+    }
+
 }
