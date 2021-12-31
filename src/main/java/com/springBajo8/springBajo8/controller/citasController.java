@@ -11,6 +11,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping(value = "/citas")
+@CrossOrigin("http://localhost:3001/")
 public class citasController {
 
     @Autowired
