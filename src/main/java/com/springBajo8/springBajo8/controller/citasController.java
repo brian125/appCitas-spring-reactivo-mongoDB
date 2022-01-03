@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping(value = "/citas")
-@CrossOrigin("http://localhost:3001/")
+@CrossOrigin(origins = "*")
 public class citasController {
 
     @Autowired
@@ -63,5 +63,4 @@ public class citasController {
     public Mono<citasDTOReactiva> getCitaMedico(@PathVariable("id") String id,@PathVariable("medico") String nombreMedico){
         return icitasReactivaService.findByMedico(id, nombreMedico);
     }
-
 }
